@@ -61,8 +61,8 @@ public class SachRepositoryImp implements SachRepository {
 
     @Override
     public boolean create(Sach sach) {
-        String sql="INSERT INTO `sach`( `ten_sach`, `tac_gia`, `the_loai`, `nam_xuat_ban`, `so_luong`, `gia_id`) VALUES (?,?,?,?,?,?)";
-        try (Connection conn = DataSource.connect();  PreparedStatement ps = conn.prepareStatement(sql);) {
+        String sql = "INSERT INTO `sach`( `ten_sach`, `tac_gia`, `the_loai`, `nam_xuat_ban`, `so_luong`, `gia_id`) VALUES (?,?,?,?,?,?)";
+        try (Connection conn = DataSource.connect(); PreparedStatement ps = conn.prepareStatement(sql);) {
             ps.setString(1, sach.getTenSach());
             ps.setString(2, sach.getTacGia());
             ps.setString(3, sach.getTheLoai());
@@ -70,22 +70,76 @@ public class SachRepositoryImp implements SachRepository {
             ps.setInt(5, sach.getSoLuong());
             ps.setInt(6, sach.getGia_id());
             int rs = ps.executeUpdate();
-            return rs>0;
+            return rs > 0;
         } catch (Exception e) {
             System.out.println("lỗi");
         }
         return false;
     }
-    
-    private Sach mapToSach(ResultSet rs) throws SQLException
-    {
+
+    @Override
+    public ArrayList<Sach> getSachByKeyword(String keyword) {
+        String sql = "SELECT * FROM sach WHERE sach.ten_sach like ? ORDER BY id";
+        ArrayList<Sach> list = new ArrayList<>();
+        try (Connection conn = DataSource.connect(); PreparedStatement ps = conn.prepareStatement(sql);) {
+            ps.setString(1, "%" + keyword + "%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(mapToSach(rs));
+            }
+        } catch (Exception e) {
+            System.out.println("lỗi");
+        }
+        return list;
+    }
+
+    @Override
+    public boolean deleteById(Integer id) {
+        String sql = "DELETE FROM sach WHERE sach.id = ? ";
+        try (Connection conn = DataSource.connect(); PreparedStatement ps = conn.prepareStatement(sql);) {
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            System.out.println("lỗi");
+        }
+        return false;
+    }
+
+    @Override
+    public boolean update(Sach sach) {
+        String sql = """
+                    UPDATE sach 
+                    SET ten_sach = ?, 
+                        tac_gia = ?, 
+                        the_loai = ?, 
+                         nam_xuat_ban = ?, 
+                        so_luong = ?, 
+                        gia_id = ?
+                    WHERE id = ? 
+                    """;
+        try (Connection conn = DataSource.connect(); PreparedStatement ps = conn.prepareStatement(sql);) {
+            ps.setString(1, sach.getTenSach());
+            ps.setString(2,sach.getTacGia());
+            ps.setString(3, sach.getTheLoai());
+            ps.setInt(4, sach.getNamXuatBan());
+            ps.setInt(5, sach.getSoLuong());
+            ps.setInt(6, sach.getGia_id());
+            ps.setInt(7, sach.getId());
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            System.out.println("lỗi");
+        }
+        return false;
+    }
+
+    private Sach mapToSach(ResultSet rs) throws SQLException {
         return Sach.builder()
-                        .id(rs.getInt("id"))
-                        .tenSach(rs.getString("ten_sach"))
-                        .tacGia(rs.getString("tac_gia"))
-                        .theLoai(rs.getString("the_loai"))
-                        .namXuatBan(rs.getInt("nam_xuat_ban"))
-                        .soLuong(rs.getInt("so_luong"))
-                        .gia_id(rs.getInt("gia_id")).build();
+                .id(rs.getInt("id"))
+                .tenSach(rs.getString("ten_sach"))
+                .tacGia(rs.getString("tac_gia"))
+                .theLoai(rs.getString("the_loai"))
+                .namXuatBan(rs.getInt("nam_xuat_ban"))
+                .soLuong(rs.getInt("so_luong"))
+                .gia_id(rs.getInt("gia_id")).build();
     }
 }

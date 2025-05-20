@@ -14,11 +14,13 @@ import Repository.KhoRepository;
 import Repository.KhoRepositoryImp;
 import Repository.SachRepository;
 import Repository.SachRepositoryImp;
+import java.awt.event.ActionEvent;
 import java.sql.Connection;
 import java.util.ArrayList;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -47,7 +49,7 @@ public class QuanLyKho extends javax.swing.JFrame {
             ArrayList<Sach> sachs = sachRepository.getAll();
             for (Sach sach : sachs) {
                 for (GiaSach giaSach : giaSachs) {
-                    if (sach.getGia_id()== giaSach.getId()) {
+                    if (sach.getGia_id() == giaSach.getId()) {
                         defaultTableModel.addRow(new Object[]{sach.getId(), sach.getTenSach(), sach.getTacGia(), sach.getTheLoai(), sach.getSoLuong(), giaSach.getTenGia()});
                     }
                 }
@@ -56,7 +58,7 @@ public class QuanLyKho extends javax.swing.JFrame {
             ArrayList<Sach> sachs = sachRepository.getSachByTenKho(kho);
             for (Sach sach : sachs) {
                 for (GiaSach giaSach : giaSachs) {
-                    if (sach.getGia_id()== giaSach.getId()) {
+                    if (sach.getGia_id() == giaSach.getId()) {
                         defaultTableModel.addRow(new Object[]{sach.getId(), sach.getTenSach(), sach.getTacGia(), sach.getTheLoai(), sach.getSoLuong(), giaSach.getTenGia()});
                     }
                 }
@@ -67,6 +69,7 @@ public class QuanLyKho extends javax.swing.JFrame {
 
     public QuanLyKho() {
         initComponents();
+
         DefaultTableModel defaultTableModel = (DefaultTableModel) listSach.getModel();
         DefaultComboBoxModel<String> comboModel = new DefaultComboBoxModel<>();
         listKho.setModel(setKho(comboModel));
@@ -84,9 +87,10 @@ public class QuanLyKho extends javax.swing.JFrame {
         listKho = new javax.swing.JComboBox<>();
         refresh = new javax.swing.JButton();
         themSach1 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
+        keyword = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
+        xoa = new javax.swing.JButton();
+        edit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Quản lý  kho");
@@ -107,6 +111,7 @@ public class QuanLyKho extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        listSach.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(listSach);
 
         themSach.setText("Thêm sách ");
@@ -137,17 +142,24 @@ public class QuanLyKho extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Chuyển sách");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
         jButton2.setText("Tìm sách");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
+            }
+        });
+
+        xoa.setText("Xóa sách");
+        xoa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                xoaActionPerformed(evt);
+            }
+        });
+
+        edit.setText("Sửa");
+        edit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editActionPerformed(evt);
             }
         });
 
@@ -159,14 +171,16 @@ public class QuanLyKho extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(listKho, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(edit)
                 .addGap(18, 18, 18)
+                .addComponent(xoa)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(themSach1)
                         .addGap(18, 18, 18)
                         .addComponent(themSach))
-                    .addComponent(jTextField1))
+                    .addComponent(keyword))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(refresh, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -182,10 +196,11 @@ public class QuanLyKho extends javax.swing.JFrame {
                     .addComponent(listKho, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(refresh)
                     .addComponent(themSach1)
-                    .addComponent(jButton1))
+                    .addComponent(xoa)
+                    .addComponent(edit))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(keyword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -196,7 +211,8 @@ public class QuanLyKho extends javax.swing.JFrame {
 
     private void themSachActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_themSachActionPerformed
 //        this.dispose();
-        new ThemSach().setVisible(true);
+        new ThemSach(this).setVisible(true);
+
     }//GEN-LAST:event_themSachActionPerformed
 
     private void listKhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listKhoActionPerformed
@@ -207,10 +223,17 @@ public class QuanLyKho extends javax.swing.JFrame {
     }//GEN-LAST:event_listKhoActionPerformed
 
     private void refreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshActionPerformed
+        keyword.setText("");
         DefaultTableModel defaultTableModel = (DefaultTableModel) listSach.getModel();
         setListSach("Tất cả", defaultTableModel);
         listKho.setSelectedIndex(0);
     }//GEN-LAST:event_refreshActionPerformed
+    public void refreshActionPerformed1(java.awt.event.ActionEvent evt) {
+        keyword.setText("");
+        DefaultTableModel defaultTableModel = (DefaultTableModel) listSach.getModel();
+        setListSach("Tất cả", defaultTableModel);
+        listKho.setSelectedIndex(0);
+    }
 
     private void themSach1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_themSach1ActionPerformed
 //        this.dispose();
@@ -218,14 +241,54 @@ public class QuanLyKho extends javax.swing.JFrame {
 
     }//GEN-LAST:event_themSach1ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         listKho.setSelectedIndex(0);
-        
+        String keyword = this.keyword.getText();
+        ArrayList<Sach> sachs = sachRepository.getSachByKeyword(keyword);
+        ArrayList<GiaSach> giaSachs = giaRepository.getAll();
+        DefaultTableModel defaultTableModel = (DefaultTableModel) listSach.getModel();
+        defaultTableModel.setRowCount(0);
+        for (Sach sach : sachs) {
+            for (GiaSach giaSach : giaSachs) {
+                if (sach.getGia_id() == giaSach.getId()) {
+                    defaultTableModel.addRow(new Object[]{sach.getId(), sach.getTenSach(), sach.getTacGia(), sach.getTheLoai(), sach.getSoLuong(), giaSach.getTenGia()});
+                }
+            }
+        }
+
+
     }//GEN-LAST:event_jButton2ActionPerformed
+    public void acction() {
+        ActionEvent evt = null;
+        this.refreshActionPerformed(evt);
+    }
+
+    private void xoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_xoaActionPerformed
+        int selectedRow = (int) listSach.getValueAt(listSach.getSelectedRow(), 0);
+
+        int result = JOptionPane.showConfirmDialog(
+                this, // Component cha (null = center màn hình)
+                "Bạn có chắc chắn muốn xóa?", // Nội dung
+                "Xác nhận", // Tiêu đề
+                JOptionPane.YES_NO_OPTION, // Kiểu nút (Yes/No)
+                JOptionPane.QUESTION_MESSAGE // Icon dấu hỏi
+        );
+        if (result == JOptionPane.YES_OPTION) {
+            sachRepository.deleteById(selectedRow);
+            this.refreshActionPerformed(evt);
+
+        }
+    }//GEN-LAST:event_xoaActionPerformed
+
+    private void editActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editActionPerformed
+        int selectedRow = listSach.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn sách");
+            return; // thoát khỏi hàm nếu chưa chọn
+        }
+        int value = (int) listSach.getValueAt(selectedRow, 0);
+        new UpdateSach(this, value).setVisible(true);
+    }//GEN-LAST:event_editActionPerformed
 
     /**
      * @param args the command line arguments
@@ -263,14 +326,15 @@ public class QuanLyKho extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton edit;
     private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField keyword;
     private javax.swing.JComboBox<String> listKho;
     private javax.swing.JTable listSach;
     private javax.swing.JButton refresh;
     private javax.swing.JButton themSach;
     private javax.swing.JButton themSach1;
+    private javax.swing.JButton xoa;
     // End of variables declaration//GEN-END:variables
 }

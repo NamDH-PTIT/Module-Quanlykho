@@ -18,4 +18,8 @@ public interface SachRepository {
     ArrayList<Sach> getSachByTenKho(String tenKho);
     
     boolean create(Sach sach);
+    ArrayList<Sach> getSachByKeyword(String keyword);
+    boolean deleteById(Integer id);
+
+    public boolean update(Sach sach);
 }

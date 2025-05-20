@@ -27,6 +27,8 @@ public class ThemSach extends javax.swing.JFrame {
     private GiaRepository giaRepository = new GiaRepositoryImp();
     private KhoRepository khoRepository = new KhoRepositoryImp();
     private SachRepository sachRepository = new SachRepositoryImp();
+    private QuanLyKho quanLyKho;
+
 
     private DefaultComboBoxModel<String> setKho(DefaultComboBoxModel<String> comboBoxModel) {
         ArrayList<Kho> khos = khoRepository.getAll();
@@ -46,7 +48,8 @@ public class ThemSach extends javax.swing.JFrame {
         return comboBoxModel;
     }
 
-    public ThemSach() {
+    public ThemSach(QuanLyKho quanLyKho) {
+        this.quanLyKho = quanLyKho;
         initComponents();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         DefaultComboBoxModel<String> defaultComboBoxModel = new DefaultComboBoxModel<>();
@@ -249,8 +252,10 @@ public class ThemSach extends javax.swing.JFrame {
         boolean checkTaoSach = sachRepository.create(new Sach(null, tenSach, tacGia, theLoai, namXuatBan, soLuong, gia.getId()));
         if (checkTaoSach) {
             JOptionPane.showMessageDialog(this, "Thêm thành công");
+            quanLyKho.refreshActionPerformed1(null);
             this.dispose();
 //            new QuanLyKho().setVisible(true);
+            
         }
         else
         {
