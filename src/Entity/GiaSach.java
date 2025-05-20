@@ -4,10 +4,25 @@
  */
 package Entity;
 
-/**
- *
- * @author admin
- */
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class GiaSach {
+    private Integer id;
+    private String tenGia;
+    private Integer khoId;
+    private String viTri;
     
+    public Object[] toRowData() {
+        return new Object[]{id, tenGia, khoId, viTri};
+    }
 }
+

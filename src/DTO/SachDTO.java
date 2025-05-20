@@ -2,26 +2,23 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package Entity;
+package DTO;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import Entity.GiaSach;
 
-
-
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class Sach {
+/**
+ *
+ * @author admin
+ */
+public class SachDTO {
     private Integer id;
     private String tenSach ;
     private String tacGia ;
     private  String theLoai ;
     private Integer namXuatBan ;
     private Integer soLuong ;
-    private Integer gia_id;
-    
+    private GiaSach giaSach;
+    public Object[] toRowData() {
+        return new Object[]{id, tenSach, tacGia, theLoai,soLuong,giaSach.getTenGia()};
+    }
 }

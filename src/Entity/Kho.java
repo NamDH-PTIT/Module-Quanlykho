@@ -4,10 +4,21 @@
  */
 package Entity;
 
-/**
- *
- * @author admin
- */
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Kho {
-    
+    private Integer id;
+    private String tenKho;
+    private String diaChi;
 }
